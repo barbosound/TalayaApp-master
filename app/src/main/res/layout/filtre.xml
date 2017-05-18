@@ -59,7 +59,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Accesibilitat"
+                    android:text="Nom Casa"
                     android:textColor="@android:color/background_dark"
                     android:textSize="15sp"
                     />
@@ -72,12 +72,47 @@
                 android:layout_marginLeft="10dp">
 
                 <EditText
-                    android:id="@+id/editAcce"
+                    android:id="@+id/editNom"
                     android:layout_width="279dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:textSize="15sp"
-                    android:hint="Vehicle propi, Transport públic..."
+                    android:hint="Nom de la casa..."
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:id="@+id/textPob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Població"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp">
+
+                <EditText
+                    android:id="@+id/editPob"
+                    android:layout_width="279dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:textSize="15sp"
+                    android:hint="Poble, ciutat..."
                     android:inputType="textPersonName" />
             </LinearLayout>
 
@@ -151,77 +186,6 @@
                     android:textSize="15sp"
                     android:inputType="textPersonName"
                     />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp">
-
-                <TextView
-                    android:id="@+id/textDisponibilitat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Disponibilitat"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="15sp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp">
-
-                <EditText
-                    android:id="@+id/editEntrada"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Seleccionar data d'entrada..."
-                    android:inputType="textPersonName"
-                    android:textSize="15sp"
-                    android:enabled="false"
-                    />
-
-                <ImageView
-                    android:id="@+id/imageEntrada"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@mipmap/ic_datepicker" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp">
-
-                <EditText
-                    android:id="@+id/editSortida"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:textSize="15sp"
-                    android:hint="Seleccionar data de sortida..."
-                    android:inputType="textPersonName"
-                    android:enabled="false"
-                    />
-
-                <ImageView
-                    android:id="@+id/imageSortida"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@mipmap/ic_datepicker" />
-
             </LinearLayout>
 
             <LinearLayout

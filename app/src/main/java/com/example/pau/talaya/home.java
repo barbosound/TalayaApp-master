@@ -102,6 +102,12 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
         if (filtre){
 
+            if(!listCases.isAdded()){
+                fM.beginTransaction().replace(R.id.frame,listCases).commit();
+            }else{
+                fM.beginTransaction().show(listCases).commit();
+            }
+
         }else {
             consultaFavorits(view);
         }

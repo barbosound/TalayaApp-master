@@ -28,6 +28,8 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.pau.talaya.FiltreCerca.CasaFiltre;
+import static com.example.pau.talaya.FiltreCerca.filtre;
 import static com.example.pau.talaya.home.CasaList;
 
 
@@ -98,29 +100,61 @@ public class ListCases extends Fragment {
 
         ListView llista = (ListView)view.findViewById(R.id.listCases);
 
-        AdapterCasa adapter = new AdapterCasa(getContext(),R.layout.casa_row,CasaList);
+        if (filtre){
 
-        llista.setAdapter(adapter);
+            AdapterCasa adapter = new AdapterCasa(getContext(),R.layout.casa_row,CasaFiltre);
 
-        llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            llista.setAdapter(adapter);
 
-                Bundle b = new Bundle();
+            llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                TextView txtId = (TextView)view.findViewById(R.id.textID);
+                    Bundle b = new Bundle();
 
-                Lid = txtId.getText().toString();
+                    TextView txtId = (TextView)view.findViewById(R.id.textID);
 
-                b.putString("id",Lid);
+                    Lid = txtId.getText().toString();
 
-                Intent intencio = new Intent(getActivity(),DescCasa.class);
+                    b.putString("id",Lid);
 
-                intencio.putExtras(b);
+                    Intent intencio = new Intent(getActivity(),DescCasa.class);
 
-                startActivity(intencio);
-            }
-        });
+                    intencio.putExtras(b);
+
+                    filtre = false;
+
+                    startActivity(intencio);
+                }
+            });
+        }else {
+
+            AdapterCasa adapter = new AdapterCasa(getContext(),R.layout.casa_row,CasaList);
+
+            llista.setAdapter(adapter);
+
+            llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    Bundle b = new Bundle();
+
+                    TextView txtId = (TextView)view.findViewById(R.id.textID);
+
+                    Lid = txtId.getText().toString();
+
+                    b.putString("id",Lid);
+
+                    Intent intencio = new Intent(getActivity(),DescCasa.class);
+
+                    intencio.putExtras(b);
+
+                    startActivity(intencio);
+                }
+            });
+        }
+
+
 
         // Inflate the layout for this fragment
         return view;

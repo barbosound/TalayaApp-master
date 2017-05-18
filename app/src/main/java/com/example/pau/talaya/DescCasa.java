@@ -324,7 +324,7 @@ public class DescCasa extends AppCompatActivity{
             user.put("Persones",Persones);
             user.put("DataEntrada",DiaE);
             user.put("DataSortida",DiaS);
-            user.put("Estat","Finalitzada");
+            user.put("Estat","Pendent");
             user.put("FKUsuari",usuariActiu.getIdUsuari());
             user.put("FKCasa",CasaList.get(indexCasa).getIdCasa());
         } catch (JSONException e) {

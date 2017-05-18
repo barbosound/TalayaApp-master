@@ -1,6 +1,7 @@
 package com.example.pau.talaya;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -39,6 +40,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.pau.talaya.LoginActivity.usuariActiu;
+import static com.example.pau.talaya.home.FavoritsList;
 
 /**
  * Created by Pau on 26/4/17.
@@ -50,8 +52,19 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
 
     private DatePickerDialog CalendarPicker;
 
-    private EditText textEntrada;
-    private EditText textSortida;
+
+    private EditText txtnom;
+    private EditText txtcom;
+    private EditText txtcap;
+
+    private EditText txtnumHabitacions;
+    private EditText txtpreuMin;
+    private EditText txtpoblacio;
+
+
+    private String nom,capacitat,comarca,numHabitacions,preuMin,poblacio;
+    private int cap;
+    private RatingBar stars;
 
     private MultiSpinner.MultiSpinnerListener listener;
 
@@ -59,6 +72,7 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
     public boolean[] seleccio;
 
     public static boolean filtre = false;
+    public static ArrayList<Casa> CasaFiltre = new ArrayList<Casa>();
 
     private Bundle b = new Bundle();
 
@@ -66,7 +80,9 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
 
     private int billar = 0, campfut = 0, campten = 0, internet = 0, piscina = 0, projector = 0,sala = 0,tenistaula = 0;
 
-    private String accessibilitat, capacitat, comarca, dataEntrara, dataSortida;
+    private ProgressDialog progress;
+    private ArrayList<String> idFavorits;
+    private Casa ObjCasa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +103,21 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
 
         items = Arrays.asList(getResources().getStringArray(R.array.multispinner_entries));
 
-        ImageView DataEntrada = (ImageView)findViewById(R.id.imageEntrada);
-        ImageView DataSortida = (ImageView)findViewById(R.id.imageSortida);
 
-        textEntrada = (EditText)findViewById(R.id.editEntrada);
-        textSortida = (EditText)findViewById(R.id.editSortida);
+        txtnom = (EditText)findViewById(R.id.editNom);
+        txtcom =(EditText)findViewById(R.id.editComarca);
+        txtcap = (EditText)findViewById(R.id.editCapacitat);
+        txtnumHabitacions = (EditText)findViewById(R.id.editNumHab);
+        txtpoblacio = (EditText)findViewById(R.id.editPob);
+        txtpreuMin = (EditText)findViewById(R.id.editPreu);
+
+        nom = txtnom.getText().toString();
+        comarca = txtcom.getText().toString();
+        capacitat = txtcap.getText().toString();
+        numHabitacions = txtnumHabitacions.getText().toString();
+        poblacio = txtpoblacio.getText().toString();
+        preuMin = txtpreuMin.getText().toString();
+        
 
         final Button cerca = (Button)findViewById(R.id.button3);
 
@@ -101,63 +127,6 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
         stars.getDrawable(2).setColorFilter(Color.parseColor("#57a639" +
                 ""), PorterDuff.Mode.SRC_ATOP);
 
-        DataEntrada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CalendarPicker = new DatePickerDialog(FiltreCerca.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                        java.util.Calendar dateCalendar = java.util.Calendar.getInstance();
-                        dateCalendar.set(java.util.Calendar.YEAR, year);
-                        dateCalendar.set(java.util.Calendar.MONTH, monthOfYear);
-                        dateCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-                        Date date = dateCalendar.getTime();
-
-                        String dateString;
-                        dateString = formatter.format(date);
-                        textEntrada.setText(dateString);
-
-                    }
-                }, dateCalendar.get(java.util.Calendar.YEAR), dateCalendar.get(java.util.Calendar.MONTH), dateCalendar.get(java.util.Calendar.DAY_OF_MONTH));
-
-                CalendarPicker.show();
-
-            }
-        });
-
-        DataSortida.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CalendarPicker = new DatePickerDialog(FiltreCerca.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                        java.util.Calendar dateCalendar = java.util.Calendar.getInstance();
-                        dateCalendar.set(java.util.Calendar.YEAR, year);
-                        dateCalendar.set(java.util.Calendar.MONTH, monthOfYear);
-                        dateCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-                        Date date = dateCalendar.getTime();
-
-                        String dateString;
-                        dateString = formatter.format(date);
-                        textSortida.setText(dateString);
-
-                    }
-                }, dateCalendar.get(java.util.Calendar.YEAR), dateCalendar.get(java.util.Calendar.MONTH), dateCalendar.get(java.util.Calendar.DAY_OF_MONTH));
-
-                CalendarPicker.show();
-
-            }
-        });
 
         MultiSpinner multiSpinner = (MultiSpinner)findViewById(R.id.multispinner);
         multiSpinner.setItems(items, "Selecciona les instal·lacions", listener);
@@ -172,6 +141,8 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
         cerca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+
+                consultaFiltre(view,nom,cap,piscina,campfut,campten,tenistaula,billar,sala,projector,internet,comarca,poblacio);
 
                 filtre = true;
 
@@ -249,5 +220,136 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
                 break;
         }
 
+    }
+
+    private void consultaFiltre (final View view,String nom, int capacitat,int piscina, int campFut, int campTen, int TenisTaula, int billar, int salaComuna, int projector, int internet, String comarca, String poblacio){
+
+        CasaFiltre.clear();
+
+        AsyncHttpClient clientFavorits;
+
+        String url = "http://talaiaapi.azurewebsites.net/api/buscar/?nom="+nom+"&capacitat="+capacitat+"&piscina="+piscina+"&campFutbol="+campFut+"&campTenis="+campTen+"&tenisTaula="+TenisTaula+"&billar="+billar+"&salaComuna="+salaComuna+"&projector="+projector+"&internet"+internet+"&comarca="+comarca+"&poblacio="+poblacio+"&carrerNum=&provincia=";
+
+        clientFavorits = new AsyncHttpClient();
+
+        clientFavorits.setMaxRetriesAndTimeout(0,10000);
+
+        clientFavorits.get(this, url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+
+                progress = ProgressDialog.show(view.getContext(), "Progrés",
+                        "Obtenint dades...", true);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                JSONArray jsonArray = null;
+                JSONObject filtre = null;
+                String str = new String(responseBody);
+
+                String idFav = "";
+
+                int IdCasa;
+                String Nom;
+                int PreuBasic;
+                int PreuMitja;
+                int PreuCompleta;
+                String Descripcio;
+                int Capacitat;
+                int Habitacions;
+                int Banys;
+                int Piscina;
+                int CampFutbol;
+                int CampTenis;
+                int TenisTaula;
+                int Billar;
+                int SalaComuna;
+                int Projector;
+                int Internet;
+                String Comarca;
+                String Poblacio;
+                String CarrerNum;
+                String Provincia;
+                int CodiPostal;
+                int FK_Propietari;
+                double Mitjana;
+                boolean favorits = false;
+
+
+                try {
+
+                    jsonArray = new JSONArray(str);
+
+                    for (int i = 0; i < jsonArray.length();i++){
+
+                        filtre = jsonArray.getJSONObject(i);
+
+                        IdCasa = filtre.getInt("IdCasa");
+                        Nom = filtre.getString("Nom");
+                        PreuBasic = filtre.optInt("PreuBasic");
+                        PreuMitja = filtre.optInt("PreuMitja");
+                        PreuCompleta = filtre.optInt("PreuCompleta");
+                        Descripcio = filtre.optString("Descripcio");
+                        Capacitat = filtre.optInt("Capacitat");
+                        Habitacions = filtre.optInt("Habitacions");
+                        Banys = filtre.optInt("Banys");
+                        Piscina = filtre.optInt("Piscina");
+                        CampFutbol = filtre.optInt("CampFutbol");
+                        CampTenis = filtre.optInt("CampTenis");
+                        TenisTaula = filtre.optInt("TenisTaula");
+                        Billar = filtre.optInt("Billar");
+                        SalaComuna = filtre.optInt("SalaComuna");
+                        Projector = filtre.optInt("Projector");
+                        Internet = filtre.optInt("Internet");
+                        Comarca = filtre.optString("Comarca");
+                        Poblacio = filtre.optString("Poblacio");
+                        CarrerNum = filtre.optString("CarrerNum");
+                        Provincia = filtre.optString("Provincia");
+                        CodiPostal = filtre.optInt("CodiPostal");
+                        FK_Propietari = filtre.optInt("FKUsuari");
+                        Mitjana = filtre.getDouble("Mitjana");
+
+                        for (int x = 0; x < idFavorits.size();x++){
+
+                            idFav = idFavorits.get(x);
+
+                            if (idFav.equals(String.valueOf(IdCasa))){
+
+                                favorits = true;
+                                break;
+
+                            }else{
+
+                                favorits = false;
+
+                            }
+                        }
+
+                        ObjCasa = new Casa(IdCasa, Nom, PreuBasic, PreuMitja, PreuCompleta, Descripcio, Capacitat, Habitacions, Banys, Piscina, CampFutbol, CampTenis, TenisTaula, Billar, SalaComuna, Projector, Internet, Comarca, Poblacio, CarrerNum, Provincia, CodiPostal, FK_Propietari, Mitjana, favorits);
+
+                        CasaFiltre.add(ObjCasa);
+
+                    }
+
+                }catch (JSONException e) {
+
+                    e.printStackTrace();
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                Snackbar.make(view, "Error de conexió", Snackbar.LENGTH_LONG)
+                        .show();
+                progress.dismiss();
+
+            }
+        });
     }
 }
