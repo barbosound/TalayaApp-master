@@ -62,7 +62,7 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
     private EditText txtpoblacio;
 
 
-    private String nom,capacitat,comarca,numHabitacions,preuMin,poblacio;
+    private String nom,comarca,numHabitacions,preuMin,poblacio;
     private int cap;
     private RatingBar stars;
 
@@ -71,18 +71,18 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
     private List<String> items;
     public boolean[] seleccio;
 
-    public static boolean filtre = false;
+    public static boolean Bfiltre = false;
     public static ArrayList<Casa> CasaFiltre = new ArrayList<Casa>();
 
     private Bundle b = new Bundle();
-
-    private Search_fragment.OnFragmentInteractionListener mListener;
 
     private int billar = 0, campfut = 0, campten = 0, internet = 0, piscina = 0, projector = 0,sala = 0,tenistaula = 0;
 
     private ProgressDialog progress;
     private ArrayList<String> idFavorits;
     private Casa ObjCasa;
+
+    private View view1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +103,7 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
 
         items = Arrays.asList(getResources().getStringArray(R.array.multispinner_entries));
 
+        view1 = getWindow().getDecorView().getRootView();
 
         txtnom = (EditText)findViewById(R.id.editNom);
         txtcom =(EditText)findViewById(R.id.editComarca);
@@ -111,13 +112,6 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
         txtpoblacio = (EditText)findViewById(R.id.editPob);
         txtpreuMin = (EditText)findViewById(R.id.editPreu);
 
-        nom = txtnom.getText().toString();
-        comarca = txtcom.getText().toString();
-        capacitat = txtcap.getText().toString();
-        numHabitacions = txtnumHabitacions.getText().toString();
-        poblacio = txtpoblacio.getText().toString();
-        preuMin = txtpreuMin.getText().toString();
-        
 
         final Button cerca = (Button)findViewById(R.id.button3);
 
@@ -142,17 +136,14 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
             @Override
             public void onClick(final View view) {
 
-                consultaFiltre(view,nom,cap,piscina,campfut,campten,tenistaula,billar,sala,projector,internet,comarca,poblacio);
+                nom = txtnom.getText().toString();
+                comarca = txtcom.getText().toString();
+                cap = Integer.parseInt(txtcap.getText().toString());
+                numHabitacions = txtnumHabitacions.getText().toString();
+                poblacio = txtpoblacio.getText().toString();
+                preuMin = txtpreuMin.getText().toString();
 
-                filtre = true;
-
-                b.putBoolean("filtre",filtre);
-
-                Intent intencio = new Intent(FiltreCerca.this, home.class);
-
-                intencio.putExtras(b);
-
-                startActivity(intencio);
+                consultaFiltre(view1,nom,cap,piscina,campfut,campten,tenistaula,billar,sala,projector,internet,comarca,poblacio);
 
             }
         });
@@ -222,19 +213,19 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
 
     }
 
-    private void consultaFiltre (final View view,String nom, int capacitat,int piscina, int campFut, int campTen, int TenisTaula, int billar, int salaComuna, int projector, int internet, String comarca, String poblacio){
+    private void consultaFiltre (final View view, String nom, int capacitat,int piscina, int campFut, int campTen, int TenisTaula, int billar, int salaComuna, int projector, int internet, String comarca, String poblacio){
 
         CasaFiltre.clear();
 
-        AsyncHttpClient clientFavorits;
+        AsyncHttpClient clientFiltre;
 
-        String url = "http://talaiaapi.azurewebsites.net/api/buscar/?nom="+nom+"&capacitat="+capacitat+"&piscina="+piscina+"&campFutbol="+campFut+"&campTenis="+campTen+"&tenisTaula="+TenisTaula+"&billar="+billar+"&salaComuna="+salaComuna+"&projector="+projector+"&internet"+internet+"&comarca="+comarca+"&poblacio="+poblacio+"&carrerNum=&provincia=";
+        String url = "http://talaiaapi.azurewebsites.net/api/buscar/?nom="+nom+"&capacitat="+capacitat+"&piscina="+piscina+"&campFutbol="+campFut+"&campTenis="+campTen+"&tenisTaula="+TenisTaula+"&billar="+billar+"&salaComuna="+salaComuna+"&projector="+projector+"&internet="+internet+"&comarca="+comarca+"&poblacio="+poblacio+"&carrerNum=&provincia=";
 
-        clientFavorits = new AsyncHttpClient();
+        clientFiltre = new AsyncHttpClient();
 
-        clientFavorits.setMaxRetriesAndTimeout(0,10000);
+        clientFiltre.setMaxRetriesAndTimeout(0,10000);
 
-        clientFavorits.get(this, url, new AsyncHttpResponseHandler() {
+        clientFiltre.get(this, url, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -312,25 +303,19 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
                         FK_Propietari = filtre.optInt("FKUsuari");
                         Mitjana = filtre.getDouble("Mitjana");
 
-                        for (int x = 0; x < idFavorits.size();x++){
-
-                            idFav = idFavorits.get(x);
-
-                            if (idFav.equals(String.valueOf(IdCasa))){
-
-                                favorits = true;
-                                break;
-
-                            }else{
-
-                                favorits = false;
-
-                            }
-                        }
-
                         ObjCasa = new Casa(IdCasa, Nom, PreuBasic, PreuMitja, PreuCompleta, Descripcio, Capacitat, Habitacions, Banys, Piscina, CampFutbol, CampTenis, TenisTaula, Billar, SalaComuna, Projector, Internet, Comarca, Poblacio, CarrerNum, Provincia, CodiPostal, FK_Propietari, Mitjana, favorits);
 
                         CasaFiltre.add(ObjCasa);
+
+                        Bfiltre = true;
+
+                        b.putBoolean("filtre",Bfiltre);
+
+                        Intent intencio = new Intent(FiltreCerca.this, home.class);
+
+                        intencio.putExtras(b);
+
+                        startActivity(intencio);
 
                     }
 

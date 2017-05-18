@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.example.pau.talaya.FiltreCerca.filtre;
+import static com.example.pau.talaya.FiltreCerca.Bfiltre;
 import static com.example.pau.talaya.LoginActivity.usuariActiu;
 
 /**
@@ -62,7 +62,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
     private ArrayList<String> FKCasa = new ArrayList<>();
     private ArrayList<String> Estat = new ArrayList<>();
 
-    private ArrayList<String> idFavorits = new ArrayList<>();
+    public static ArrayList<String> idFavorits = new ArrayList<>();
 
     public static boolean teReserves = false, teFavorits = false, teFinalitzades = false;
 
@@ -100,7 +100,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
         view = getWindow().getDecorView().getRootView();
 
-        if (filtre){
+        if (Bfiltre){
 
             if(!listCases.isAdded()){
                 fM.beginTransaction().replace(R.id.frame,listCases).commit();
@@ -109,10 +109,9 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
             }
 
         }else {
+
             consultaFavorits(view);
         }
-
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -249,7 +248,10 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
             case R.id.refresh:
 
+                Bfiltre = false;
+                fM.beginTransaction().remove(listCases).commit();
                 consultaFavorits(view);
+
                 break;
         }
 
@@ -266,7 +268,6 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
         AsyncHttpClient clientCasa;
 
         String url = "http://talaiaapi.azurewebsites.net/api/casa";
-
 
         CasaList.clear();
         FavoritsList.clear();

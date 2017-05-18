@@ -28,8 +28,8 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.pau.talaya.FiltreCerca.Bfiltre;
 import static com.example.pau.talaya.FiltreCerca.CasaFiltre;
-import static com.example.pau.talaya.FiltreCerca.filtre;
 import static com.example.pau.talaya.home.CasaList;
 
 
@@ -54,8 +54,6 @@ public class ListCases extends Fragment {
     private String Lid ="";
 
     private OnFragmentInteractionListener mListener;
-    private ProgressDialog progress;
-    private AsyncHttpClient clientUsuari;
 
     private View view;
 
@@ -100,9 +98,9 @@ public class ListCases extends Fragment {
 
         ListView llista = (ListView)view.findViewById(R.id.listCases);
 
-        if (filtre){
+        if (Bfiltre){
 
-            AdapterCasa adapter = new AdapterCasa(getContext(),R.layout.casa_row,CasaFiltre);
+            AdapterFiltre adapter = new AdapterFiltre(getContext(),R.layout.casa_row,CasaFiltre);
 
             llista.setAdapter(adapter);
 
@@ -121,8 +119,6 @@ public class ListCases extends Fragment {
                     Intent intencio = new Intent(getActivity(),DescCasa.class);
 
                     intencio.putExtras(b);
-
-                    filtre = false;
 
                     startActivity(intencio);
                 }

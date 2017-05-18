@@ -48,6 +48,7 @@
             android:id="@+id/editText"
             android:textAlignment="center"
             android:hint="Usuari"
+            android:text="agusti"
             android:background="@android:color/transparent"
             />
     </RelativeLayout>
@@ -70,6 +71,7 @@
             android:id="@+id/editText4"
             android:textAlignment="center"
             android:hint="Password"
+            android:text="password"
             android:background="@android:color/transparent"/>
     </RelativeLayout>
 

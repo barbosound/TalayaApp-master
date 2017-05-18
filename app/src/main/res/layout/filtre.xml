@@ -147,6 +147,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:textSize="15sp"
+                    android:text="0"
                     android:hint="Número de persones..."
                     android:inputType="textPersonName"
                     />

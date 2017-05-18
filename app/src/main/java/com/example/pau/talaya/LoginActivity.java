@@ -55,24 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(Color.parseColor("#4C9141"));
 
-        usuaris.add("pau");
-        usuaris.add("ricard");
-        usuaris.add("albert");
-        usuaris.add("arnau");
-        usuaris.add("arnau");
-
-        contra1 = getHash("1234");
-        contra2 = getHash("1235");
-        contra3 = getHash("1236");
-        contra4 = getHash("1237");
-        contra5 = getHash("prova");
-
-        contrasenya.add(contra1);
-        contrasenya.add(contra2);
-        contrasenya.add(contra3);
-        contrasenya.add(contra4);
-        contrasenya.add(contra4);
-
 
         resgistre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,8 +83,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
-        txtContra.setText("");
-        txtUsr.setText("");
+//        txtContra.setText("");
+//        txtUsr.setText("");
 
     }
 
