@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.pau.talaya.FiltreCerca.filtre;
 import static com.example.pau.talaya.LoginActivity.usuariActiu;
 
 /**
@@ -66,6 +67,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
     public static boolean teReserves = false, teFavorits = false, teFinalitzades = false;
 
     public Bundle bReserva = new Bundle();
+    public Bundle bFiltre = new Bundle();
     public ProgressDialog progress;
 
     private View view;
@@ -98,7 +100,13 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
         view = getWindow().getDecorView().getRootView();
 
-        consultaFavorits(view);
+        if (filtre){
+
+        }else {
+            consultaFavorits(view);
+        }
+
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
