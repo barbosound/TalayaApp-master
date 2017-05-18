@@ -74,6 +74,7 @@ public class DescCasa extends AppCompatActivity{
     private boolean noInstalacions = false;
 
     private View view;
+    private String poblacio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,8 @@ public class DescCasa extends AppCompatActivity{
         final Bundle b = getIntent().getExtras();
 
         TextView txtNom = (TextView)findViewById(R.id.textNom);
+        TextView txtPob = (TextView)findViewById(R.id.textPob);
+        TextView txtPreu = (TextView)findViewById(R.id.textPreu);
         TextView txtComarca = (TextView)findViewById(R.id.textComarca);
         TextView txtCapacitat = (TextView)findViewById(R.id.textCapacitat);
         TextView txtRating = (TextView)findViewById(R.id.textPuntuacio);
@@ -120,10 +123,14 @@ public class DescCasa extends AppCompatActivity{
         }
 
         nom = CasaList.get(indexCasa).getNom() + ",";
-        txtNom.setText(nom);
-        txtComarca.setText(CasaList.get(indexCasa).getComarca());
+        poblacio = CasaList.get(indexCasa).getPoblacio() +",";
+        preu = CasaList.get(indexCasa).getPreuBasic() + " €/nit (consultar)";
+        capacitat = CasaList.get(indexCasa).getCapacitat() + " persones -";
 
-        capacitat = CasaList.get(indexCasa).getCapacitat() + " persones";
+        txtNom.setText(nom);
+        txtPob.setText(poblacio);
+        txtComarca.setText(CasaList.get(indexCasa).getComarca());
+        txtPreu.setText(preu);
         txtCapacitat.setText(capacitat);
 
         txtRating.setText(String.valueOf(CasaList.get(indexCasa).getMitjana()));
