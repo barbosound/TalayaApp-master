@@ -52,12 +52,6 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
     FragmentManager fM = getSupportFragmentManager();
 
-    private ArrayList<String> id = new ArrayList<>();
-    private ArrayList<String> nom = new ArrayList<>();
-    private ArrayList<String> capacitat = new ArrayList<>();
-    private ArrayList<String> comarca = new ArrayList<>();
-    private ArrayList<String> rating = new ArrayList<>();
-
     private ArrayList<String> idReserva = new ArrayList<>();
     private ArrayList<String> preuReserva = new ArrayList<>();
     private ArrayList<String> diesReserva = new ArrayList<>();
@@ -69,15 +63,22 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
     private ArrayList<String> idFavorits = new ArrayList<>();
 
-    public static boolean teReserves = false, teFavorits = false;
+    public static boolean teReserves = false, teFavorits = false, teFinalitzades = false;
 
-    public Bundle bCasa = new Bundle();
     public Bundle bReserva = new Bundle();
     public ProgressDialog progress;
 
     private View view;
 
     private Casa ObjCasa;
+
+    private ArrayList<String> idReservaFin = new ArrayList<>();
+    private ArrayList<String> preuReservaFin = new ArrayList<>();
+    private ArrayList<String> DataEntradaFin = new ArrayList<>();
+    private ArrayList<String> DataSortidaFin = new ArrayList<>();
+    private ArrayList<String> FKUsuariFin = new ArrayList<>();
+    private ArrayList<String> FKCasaFin = new ArrayList<>();
+    private ArrayList<String> EstatFin = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,11 +257,6 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
         CasaList.clear();
         FavoritsList.clear();
 
-        id.clear();
-        nom.clear();
-        capacitat.clear();
-        comarca.clear();
-
         clientCasa = new AsyncHttpClient();
 
         clientCasa.setMaxRetriesAndTimeout(0,10000);
@@ -408,6 +404,14 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
         FKCasa.clear();
         Estat.clear();
 
+        idReservaFin.clear();
+        preuReservaFin.clear();
+        DataEntradaFin.clear();
+        DataSortidaFin.clear();
+        FKUsuariFin.clear();
+        FKCasaFin.clear();
+        EstatFin.clear();
+
         clientReserva = new AsyncHttpClient();
 
         clientReserva.setMaxRetriesAndTimeout(0,10000);
@@ -428,13 +432,35 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
                         reserva = jsonArray.getJSONObject(i);
 
-                        idReserva.add(String.valueOf(reserva.getInt("IdReserva")));
-                        preuReserva.add(String.valueOf(reserva.getInt("Preu")));
-                        DataEntrada.add(String.valueOf(reserva.get("DataEntrada")));
-                        DataSortida.add(String.valueOf(reserva.get("DataSortida")));
-                        FKUsuari.add(String.valueOf(reserva.getInt("FKUsuari")));
-                        FKCasa.add(String.valueOf(reserva.getInt("FKCasa")));
-                        Estat.add(reserva.getString("Estat"));
+                        if (reserva.getInt("FKUsuari")==(usuariActiu.getIdUsuari())){
+
+                            if (reserva.getString("Estat").equals("Pendent") || reserva.getString("Estat").equals("Acceptada")){
+
+                                idReserva.add(String.valueOf(reserva.getInt("IdReserva")));
+                                preuReserva.add(String.valueOf(reserva.getInt("Preu")));
+                                DataEntrada.add(String.valueOf(reserva.get("DataEntrada")));
+                                DataSortida.add(String.valueOf(reserva.get("DataSortida")));
+                                FKUsuari.add(String.valueOf(reserva.getInt("FKUsuari")));
+                                FKCasa.add(String.valueOf(reserva.getInt("FKCasa")));
+                                Estat.add(reserva.getString("Estat"));
+
+                                teReserves = true;
+                            }else {
+                                if (reserva.getString("Estat").equals("Finalitzada")){
+
+                                    idReservaFin.add(String.valueOf(reserva.getInt("IdReserva")));
+                                    preuReservaFin.add(String.valueOf(reserva.getInt("Preu")));
+                                    DataEntradaFin.add(String.valueOf(reserva.get("DataEntrada")));
+                                    DataSortidaFin.add(String.valueOf(reserva.get("DataSortida")));
+                                    FKUsuariFin.add(String.valueOf(reserva.getInt("FKUsuari")));
+                                    FKCasaFin.add(String.valueOf(reserva.getInt("FKCasa")));
+                                    EstatFin.add(reserva.getString("Estat"));
+
+                                    teFinalitzades = true;
+                                }
+                            }
+
+                        }
 
                     }
 
@@ -446,22 +472,21 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
                 bReserva.putStringArrayList("id",idReserva);
                 bReserva.putStringArrayList("preu",preuReserva);
-                bReserva.putStringArrayList("nom",nom);
                 bReserva.putStringArrayList("DE",DataEntrada);
                 bReserva.putStringArrayList("DS",DataSortida);
                 bReserva.putStringArrayList("FKUsuari",FKUsuari);
                 bReserva.putStringArrayList("FKCasa",FKCasa);
                 bReserva.putStringArrayList("Estat",Estat);
 
+                bReserva.putStringArrayList("idFin",idReservaFin);
+                bReserva.putStringArrayList("preuFin",preuReservaFin);
+                bReserva.putStringArrayList("DEFin",DataEntradaFin);
+                bReserva.putStringArrayList("DSFin",DataSortidaFin);
+                bReserva.putStringArrayList("FKUsuariFin",FKUsuariFin);
+                bReserva.putStringArrayList("FKCasaFin",FKCasaFin);
+                bReserva.putStringArrayList("EstatFin",EstatFin);
+
                 perfil.setArguments(bReserva);
-
-                for (int i = 0; i < FKUsuari.size();i++){
-
-                    if (FKUsuari.get(i).equals(String.valueOf(usuariActiu.getIdUsuari()))){
-
-                        teReserves = true;
-                    }
-                }
 
                 progress.dismiss();
 

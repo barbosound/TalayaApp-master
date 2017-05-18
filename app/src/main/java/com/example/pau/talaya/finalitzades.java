@@ -7,6 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import static com.example.pau.talaya.home.teFinalitzades;
+import static com.example.pau.talaya.home.teReserves;
 
 
 /**
@@ -26,6 +33,13 @@ public class finalitzades extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ArrayList<String> idReservaFin = new ArrayList<>();
+    private ArrayList<String> DataEntradaFin = new ArrayList<>();
+    private ArrayList<String> DataSortidaFin = new ArrayList<>();
+    private ArrayList<String> FKUsuariFin = new ArrayList<>();
+    private ArrayList<String> FKCasaFin = new ArrayList<>();
+    private ArrayList<String> EstatFin = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,6 +71,13 @@ public class finalitzades extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
+            idReservaFin = getArguments().getStringArrayList("id");
+            DataEntradaFin = getArguments().getStringArrayList("DE");
+            DataSortidaFin = getArguments().getStringArrayList("DS");
+            FKUsuariFin = getArguments().getStringArrayList("FKUsuari");
+            FKCasaFin = getArguments().getStringArrayList("FKCasa");
+            EstatFin = getArguments().getStringArrayList("Estat");
         }
     }
 
@@ -64,7 +85,25 @@ public class finalitzades extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_finalitzades, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_finalitzades, container, false);
+
+        ListView llista = (ListView)view.findViewById(R.id.listReserva);
+
+        LinearLayout noData = (LinearLayout)view.findViewById(R.id.noData);
+
+        if (teFinalitzades){
+
+            AdapterFinalitzada adapter = new AdapterFinalitzada(getContext(),R.layout.row_reserva,idReservaFin,DataEntradaFin,DataSortidaFin,FKCasaFin,EstatFin,FKUsuariFin);
+
+            llista.setAdapter(adapter);
+
+        }else {
+
+            noData.setVisibility(View.VISIBLE);
+
+        }
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

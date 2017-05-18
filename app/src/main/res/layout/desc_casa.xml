@@ -35,11 +35,30 @@
             layout="@layout/floating_fav"
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <Button
+                android:id="@+id/btnReserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Reserva"
+                android:textColor="@color/white"
+                android:elevation="4dp"
+                android:background="@color/verd"/>
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/layer_card_background">
 
@@ -74,7 +93,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/layer_card_background"
             >
@@ -187,7 +205,6 @@
             </LinearLayout>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -49,7 +48,16 @@ public class Perfil extends Fragment {
     private ArrayList<String> FKCasa = new ArrayList<>();
     private ArrayList<String> Estat = new ArrayList<>();
 
-    private Bundle b = new Bundle();
+    private ArrayList<String> idReservaFin;
+    private ArrayList<String> preuReservaFin;
+    private ArrayList<String> DataEntradaFin;
+    private ArrayList<String> DataSortidaFin;
+    private ArrayList<String> FKUsuariFin;
+    private ArrayList<String> FKCasaFin;
+    private ArrayList<String> EstatFin;
+
+    private Bundle bPen = new Bundle();
+    private Bundle bFin = new Bundle();
 
     public Perfil() {
         // Required empty public constructor
@@ -81,21 +89,33 @@ public class Perfil extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
 
             idReserva = getArguments().getStringArrayList("id");
-            nom = getArguments().getStringArrayList("nom");
             DataEntrada = getArguments().getStringArrayList("DE");
             DataSortida = getArguments().getStringArrayList("DS");
             FKUsuari = getArguments().getStringArrayList("FKUsuari");
             FKCasa = getArguments().getStringArrayList("FKCasa");
             Estat = getArguments().getStringArrayList("Estat");
 
+            idReservaFin = getArguments().getStringArrayList("idFin");
+            DataEntradaFin = getArguments().getStringArrayList("DEFin");
+            DataSortidaFin = getArguments().getStringArrayList("DSFin");
+            FKUsuariFin = getArguments().getStringArrayList("FKUsuariFin");
+            FKCasaFin = getArguments().getStringArrayList("FKCasaFin");
+            EstatFin = getArguments().getStringArrayList("EstatFin");
 
-            b.putStringArrayList("id",idReserva);
-            b.putStringArrayList("nom",nom);
-            b.putStringArrayList("DE",DataEntrada);
-            b.putStringArrayList("DS",DataSortida);
-            b.putStringArrayList("FKUsuari",FKUsuari);
-            b.putStringArrayList("FKCasa",FKCasa);
-            b.putStringArrayList("Estat",Estat);
+
+            bPen.putStringArrayList("id",idReserva);
+            bPen.putStringArrayList("DE",DataEntrada);
+            bPen.putStringArrayList("DS",DataSortida);
+            bPen.putStringArrayList("FKUsuari",FKUsuari);
+            bPen.putStringArrayList("FKCasa",FKCasa);
+            bPen.putStringArrayList("Estat",Estat);
+
+            bFin.putStringArrayList("id",idReservaFin);
+            bFin.putStringArrayList("DE",DataEntradaFin);
+            bFin.putStringArrayList("DS",DataSortidaFin);
+            bFin.putStringArrayList("FKUsuari",FKUsuariFin);
+            bFin.putStringArrayList("FKCasa",FKCasaFin);
+            bFin.putStringArrayList("Estat",EstatFin);
         }
     }
 
@@ -143,8 +163,10 @@ public class Perfil extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         MIFragmentPageManager adapter = new MIFragmentPageManager(getChildFragmentManager());
 
+        Fpendents.setArguments(bPen);
         adapter.addFragment(Fpendents, "Pendents");
 
+        Ffinalitzades.setArguments(bFin);
         adapter.addFragment(Ffinalitzades, "Finalitzades");
 
         adapter.addFragment(Ffavorits, "Favorits");

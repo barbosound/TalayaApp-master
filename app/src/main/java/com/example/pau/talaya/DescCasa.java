@@ -1,6 +1,9 @@
 package com.example.pau.talaya;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,8 +14,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -28,6 +35,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -46,19 +56,20 @@ import static com.example.pau.talaya.home.CasaList;
 
 public class DescCasa extends AppCompatActivity{
 
-    private boolean fav = false;
 
-    private int billar = 0;
-    private int campFut = 0;
-    private int campTen = 0;
-    private int internet = 0;
-    private int piscina = 0;
-    private int projector = 0;
-    private int sala = 0;
-    private int pingpong = 0;
     private AsyncHttpClient clientUsuari;
     private ProgressDialog progress;
+    private DatePickerDialog CalendarPicker;
+    private Calendar dateCalendar = Calendar.getInstance();
     private int indexCasa;
+
+    final Context context = this;
+
+    private Date dateE, dateS;
+
+    String DiaE, DiaS;
+
+    int Dies, Persones;
 
     private boolean noInstalacions = false;
 
@@ -93,6 +104,8 @@ public class DescCasa extends AppCompatActivity{
         ImageView projectorImg = (ImageView)findViewById(R.id.image6);
         ImageView salaImg = (ImageView)findViewById(R.id.image7);
         ImageView pingpongImg = (ImageView)findViewById(R.id.image8);
+
+        Button reserva = (Button)findViewById(R.id.btnReserva);
 
         id = b.getString("id");
 
@@ -199,7 +212,148 @@ public class DescCasa extends AppCompatActivity{
             noData.setVisibility(View.VISIBLE);
         }
 
+        reserva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.custom);
+                dialog.setTitle("Reserva");
+                // set the custom dialog components - text, image and button
+
+                final EditText txtDies = (EditText)dialog.findViewById(R.id.editDia);
+                final EditText txtDiaE = (EditText)dialog.findViewById(R.id.editDiaE);
+                final EditText txtDiaS = (EditText)dialog.findViewById(R.id.editDiaS);
+                final EditText txtPersones = (EditText)dialog.findViewById(R.id.editPersones);
+
+                ImageView DataEntrada = (ImageView)dialog.findViewById(R.id.imageEntrada);
+                ImageView DataSortida = (ImageView)dialog.findViewById(R.id.imageSortida);
+
+                DataEntrada.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        CalendarPicker = new DatePickerDialog(DescCasa.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                                java.util.Calendar dateCalendar = java.util.Calendar.getInstance();
+                                dateCalendar.set(java.util.Calendar.YEAR, year);
+                                dateCalendar.set(java.util.Calendar.MONTH, monthOfYear);
+                                dateCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+                                dateE = dateCalendar.getTime();
+
+                                String dateString;
+                                dateString = formatter.format(dateE);
+                                txtDiaE.setText(dateString);
+                                DiaE = (String) DateFormat.format("yyyy-MM-dd kk:mm:ss", dateE);
+
+                            }
+                        }, dateCalendar.get(java.util.Calendar.YEAR), dateCalendar.get(java.util.Calendar.MONTH), dateCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+
+                        CalendarPicker.show();
+
+                    }
+                });
+
+                DataSortida.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        CalendarPicker = new DatePickerDialog(DescCasa.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                                java.util.Calendar dateCalendar = java.util.Calendar.getInstance();
+                                dateCalendar.set(java.util.Calendar.YEAR, year);
+                                dateCalendar.set(java.util.Calendar.MONTH, monthOfYear);
+                                dateCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+                                dateS = dateCalendar.getTime();
+
+                                String dateString;
+                                dateString = formatter.format(dateS);
+                                txtDiaS.setText(dateString);
+
+                                DiaS = (String) DateFormat.format("yyyy-MM-dd kk:mm:ss", dateS);
+
+                            }
+                        }, dateCalendar.get(java.util.Calendar.YEAR), dateCalendar.get(java.util.Calendar.MONTH), dateCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+
+                        CalendarPicker.show();
+
+                    }
+                });
+
+
+
+                Button dialogButton = (Button) dialog.findViewById(R.id.buttonAccepta);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Dies = Integer.parseInt(txtDies.getText().toString());
+                        Persones = Integer.parseInt(txtPersones.getText().toString());
+                        postReserva(Dies,DiaE,DiaS,Persones);
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
     }
+
+    private void postReserva(int Dies, String DiaE, String DiaS, int Persones) {
+
+        HttpResponse response;
+        HttpClient client = new DefaultHttpClient();
+        String url = "http://talaiaapi.azurewebsites.net/api/reserva";
+        HttpPost post = new HttpPost(url);
+
+        JSONObject user = new JSONObject();
+
+        try {
+            user.put("Preu",0);
+            user.put("Dies",Dies);
+            user.put("Persones",Persones);
+            user.put("DataEntrada",DiaE);
+            user.put("DataSortida",DiaS);
+            user.put("Estat","Finalitzada");
+            user.put("FKUsuari",usuariActiu.getIdUsuari());
+            user.put("FKCasa",CasaList.get(indexCasa).getIdCasa());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String strUser = user.toString();
+
+        post.setEntity(new StringEntity(strUser, "UTF-8"));
+        post.setHeader("Content-Type", "application/json");
+
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+        }
+
+        try {
+            response = client.execute(post);
+            String sresponse = response.getEntity().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void posaMarcador(String idCasa) {
 
         HttpResponse response;
@@ -266,15 +420,6 @@ public class DescCasa extends AppCompatActivity{
                 try {
 
                     casa = new JSONObject(str);
-
-                    billar = casa.getInt("Billar");
-                    campFut = casa.getInt("CampFutbol");
-                    campTen = casa.getInt("CampTenis");
-                    internet = casa.getInt("Internet");
-                    piscina = casa.getInt("Piscina");
-                    projector = casa.getInt("Projector");
-                    sala = casa.getInt("SalaComuna");
-                    pingpong = casa.getInt("TenisTaula");
 
                 }catch (JSONException e) {
 

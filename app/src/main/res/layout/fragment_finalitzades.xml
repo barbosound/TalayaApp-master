@@ -5,9 +5,26 @@
     tools:context="com.example.pau.talaya.finalitzades">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="finalitzades" />
+        android:id="@+id/listReserva"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/noData"
+        android:visibility="invisible"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textNoData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No existeixen reserves"
+        android:gravity="center"
+        android:textSize="16sp" />
+
+    </LinearLayout>
 </FrameLayout>

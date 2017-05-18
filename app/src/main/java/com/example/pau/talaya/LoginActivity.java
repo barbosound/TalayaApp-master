@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         final String url = "http://talaiaapi.azurewebsites.net/api/usuari/?correu="+correu+"&pass="+contrasenya;
 
         clientUsuari = new AsyncHttpClient();
-        clientUsuari.setMaxRetriesAndTimeout(0,10000);
+        clientUsuari.setMaxRetriesAndTimeout(0,5000);
 
         clientUsuari.get(LoginActivity.this, url, new AsyncHttpResponseHandler() {
 

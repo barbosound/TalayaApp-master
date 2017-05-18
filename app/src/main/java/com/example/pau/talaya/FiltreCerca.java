@@ -58,14 +58,9 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
     private List<String> items;
     public boolean[] seleccio;
 
-    private AsyncHttpClient client;
-    private String url = " http://talaiaapi.azurewebsites.net/api/casa";
+    public static boolean filtre = false;
 
-    private ArrayList<String> ArrayId = new ArrayList<>();
-    private ArrayList<String> ArrayNom = new ArrayList<>();
-    private ArrayList<String> ArrayCapacitat = new ArrayList<>();
-    private ArrayList<String> ArrayComarca = new ArrayList<>();
-    private ArrayList<String> ArrayRating = new ArrayList<>();
+    private Bundle b = new Bundle();
 
     private Search_fragment.OnFragmentInteractionListener mListener;
 
@@ -178,7 +173,13 @@ public class FiltreCerca extends AppCompatActivity implements MultiSpinner.OnIte
             @Override
             public void onClick(final View view) {
 
+                filtre = true;
+
+                b.putBoolean("filtre",filtre);
+
                 Intent intencio = new Intent(FiltreCerca.this, home.class);
+
+                intencio.putExtras(b);
 
                 startActivity(intencio);
 
