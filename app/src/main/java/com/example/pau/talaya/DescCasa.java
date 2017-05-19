@@ -71,8 +71,6 @@ public class DescCasa extends AppCompatActivity{
 
     int Dies, Persones;
 
-    private boolean noInstalacions = false;
-
     private View view;
     private String poblacio;
 

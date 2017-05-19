@@ -27,6 +27,7 @@ import static com.example.pau.talaya.home.CasaList;
 public class AdapterFav extends ArrayAdapter<Casa> {
 
     private ArrayList<Casa> FavoritsList = new ArrayList<>();
+    private String preu;
 
     public AdapterFav(Context context, int layoutResourceId, ArrayList<Casa> FavoritsList) {
         super(context, layoutResourceId, FavoritsList);
@@ -51,13 +52,19 @@ public class AdapterFav extends ArrayAdapter<Casa> {
         stars.getDrawable(2).setColorFilter(Color.parseColor("#57a639" +
                 ""), PorterDuff.Mode.SRC_ATOP);
 
+        TextView txtid = (TextView)view.findViewById(R.id.textID);
         TextView txtnom = (TextView)view.findViewById(R.id.textNom);
         TextView txtdesc = (TextView)view.findViewById(R.id.textCap);
         TextView txtcom = (TextView)view.findViewById(R.id.textComarca);
+        TextView txtpreu = (TextView)view.findViewById(R.id.textPreu);
 
+        txtid.setText(String.valueOf(FavoritsList.get(position).getIdCasa()));
         txtnom.setText(FavoritsList.get(position).getNom());
         txtdesc.setText(String.valueOf(FavoritsList.get(position).getCapacitat()));
         txtcom.setText("("+FavoritsList.get(position).getComarca()+")");
+        preu = String.valueOf(FavoritsList.get(position).getPreuBasic() +" €");
+        txtpreu.setText(preu);
+
         avg = Float.parseFloat(String.valueOf(FavoritsList.get(position).getMitjana()));
 
         avgRating.setEnabled(false);

@@ -40,6 +40,7 @@ public class favorits extends Fragment {
     private OnFragmentInteractionListener mListener;
     private View view;
     private String Lnom;
+    private String Lid;
 
     public favorits() {
         // Required empty public constructor
@@ -93,11 +94,11 @@ public class favorits extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Bundle b = new Bundle();
 
-                    TextView txtNom = (TextView)view.findViewById(R.id.textNom);
+                    TextView txtId = (TextView)view.findViewById(R.id.textID);
 
-                    Lnom = txtNom.getText().toString();
+                    Lid = txtId.getText().toString();
 
-                    b.putString("nom",Lnom);
+                    b.putString("id",Lid);
 
                     Intent intencio = new Intent(getActivity(),DescCasa.class);
 
