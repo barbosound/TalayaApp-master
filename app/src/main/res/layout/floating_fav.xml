@@ -141,6 +141,7 @@
                     <LinearLayout
                         android:layout_width="100dp"
                         android:layout_height="45dp"
+                        android:id="@+id/rating"
                         android:background="@drawable/borde_puntuacio2"
                         android:orientation="horizontal">
 
@@ -156,11 +157,36 @@
                             android:focusableInTouchMode="false"
                             android:isIndicator="true"
                             android:numStars="5"/>
+
                     </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        >
+
+                        <Button
+                            android:id="@+id/button4"
+                            android:layout_width="150dp"
+                            android:layout_height="45dp"
+                            android:background="@drawable/borde_valora"
+                            android:elevation="10dp"
+                            android:text="Valora"
+                            android:textAllCaps="false" />
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
 
+
+
             </RelativeLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>

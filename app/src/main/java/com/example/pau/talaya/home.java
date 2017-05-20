@@ -102,6 +102,8 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
         if (Bfiltre){
 
+            consultaFiltreReserves(view);
+
             if(!listCases.isAdded()){
                 fM.beginTransaction().replace(R.id.frame,listCases).commit();
             }else{
@@ -580,4 +582,114 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
         });
 
     }
+    private void consultaFiltreReserves(final View view){
+
+        AsyncHttpClient clientReserva;
+
+        String url = "http://talaiaapi.azurewebsites.net/api/reserva";
+
+        idReserva.clear();
+        preuReserva.clear();
+        DataEntrada.clear();
+        DataSortida.clear();
+        FKCasa.clear();
+        Estat.clear();
+
+        idReservaFin.clear();
+        preuReservaFin.clear();
+        DataEntradaFin.clear();
+        DataSortidaFin.clear();
+        FKUsuariFin.clear();
+        FKCasaFin.clear();
+        EstatFin.clear();
+
+        clientReserva = new AsyncHttpClient();
+
+        clientReserva.setMaxRetriesAndTimeout(0,10000);
+
+        clientReserva.get(home.this, url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                JSONArray jsonArray = null;
+                JSONObject reserva = null;
+                String str = new String(responseBody);
+
+                try {
+
+                    jsonArray = new JSONArray(str);
+
+                    for (int i = 0; i < jsonArray.length();i++){
+
+                        reserva = jsonArray.getJSONObject(i);
+
+                        if (reserva.getInt("FKUsuari")==(usuariActiu.getIdUsuari())){
+
+                            if (reserva.getString("Estat").equals("Pendent") || reserva.getString("Estat").equals("Acceptada")){
+
+                                idReserva.add(String.valueOf(reserva.getInt("IdReserva")));
+                                preuReserva.add(String.valueOf(reserva.getInt("Preu")));
+                                DataEntrada.add(String.valueOf(reserva.get("DataEntrada")));
+                                DataSortida.add(String.valueOf(reserva.get("DataSortida")));
+                                FKUsuari.add(String.valueOf(reserva.getInt("FKUsuari")));
+                                FKCasa.add(String.valueOf(reserva.getInt("FKCasa")));
+                                Estat.add(reserva.getString("Estat"));
+
+                                teReserves = true;
+                            }else {
+                                if (reserva.getString("Estat").equals("Finalitzada")){
+
+                                    idReservaFin.add(String.valueOf(reserva.getInt("IdReserva")));
+                                    preuReservaFin.add(String.valueOf(reserva.getInt("Preu")));
+                                    DataEntradaFin.add(String.valueOf(reserva.get("DataEntrada")));
+                                    DataSortidaFin.add(String.valueOf(reserva.get("DataSortida")));
+                                    FKUsuariFin.add(String.valueOf(reserva.getInt("FKUsuari")));
+                                    FKCasaFin.add(String.valueOf(reserva.getInt("FKCasa")));
+                                    EstatFin.add(reserva.getString("Estat"));
+
+                                    teFinalitzades = true;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }catch (JSONException e) {
+
+                    e.printStackTrace();
+
+                }
+
+                bReserva.putStringArrayList("id",idReserva);
+                bReserva.putStringArrayList("preu",preuReserva);
+                bReserva.putStringArrayList("DE",DataEntrada);
+                bReserva.putStringArrayList("DS",DataSortida);
+                bReserva.putStringArrayList("FKUsuari",FKUsuari);
+                bReserva.putStringArrayList("FKCasa",FKCasa);
+                bReserva.putStringArrayList("Estat",Estat);
+
+                bReserva.putStringArrayList("idFin",idReservaFin);
+                bReserva.putStringArrayList("preuFin",preuReservaFin);
+                bReserva.putStringArrayList("DEFin",DataEntradaFin);
+                bReserva.putStringArrayList("DSFin",DataSortidaFin);
+                bReserva.putStringArrayList("FKUsuariFin",FKUsuariFin);
+                bReserva.putStringArrayList("FKCasaFin",FKCasaFin);
+                bReserva.putStringArrayList("EstatFin",EstatFin);
+
+                perfil.setArguments(bReserva);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                Snackbar.make(view, "Error de conexió", Snackbar.LENGTH_LONG)
+                        .show();
+
+            }
+        });
+
+    }
+
 }

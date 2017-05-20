@@ -122,7 +122,7 @@ public class DescCasa extends AppCompatActivity{
 
         nom = CasaList.get(indexCasa).getNom() + ",";
         poblacio = CasaList.get(indexCasa).getPoblacio() +",";
-        preu = CasaList.get(indexCasa).getPreuBasic() + " €/nit (consultar)";
+        preu = CasaList.get(indexCasa).getPreuBasic() + " €/nit";
         capacitat = CasaList.get(indexCasa).getCapacitat() + " persones -";
 
         txtNom.setText(nom);
