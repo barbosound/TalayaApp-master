@@ -42,6 +42,7 @@ import java.util.Date;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpDelete;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
@@ -175,6 +176,8 @@ public class DescCasa extends AppCompatActivity{
 
                     favorits.setImageResource(R.drawable.star_unselected);
                     CasaList.get(indexCasa).setFavorits(false);
+
+                    treuMarcador();
 
                 }else {
 
@@ -400,49 +403,30 @@ public class DescCasa extends AppCompatActivity{
 
 
     }
-    public void treuMarcador(final View view){
+    public void treuMarcador(){
 
-        final String url = "http://talaiaapi.azurewebsites.net/api/marcador/"+usuariActiu.getIdUsuari();
+        HttpClient client = new DefaultHttpClient();
 
-        final View view2 = view;
+        String url = "http://talaiaapi.azurewebsites.net/api/marcador/?casa="+CasaList.get(indexCasa).getIdCasa()+"&usuari="+usuariActiu.getIdUsuari();
 
-        clientUsuari = new AsyncHttpClient();
-        clientUsuari.setMaxRetriesAndTimeout(0,10000);
+        HttpDelete httpdel = new HttpDelete(url);
 
-        clientUsuari.get(DescCasa.this, url, new AsyncHttpResponseHandler() {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
 
-            @Override
-            public void onStart() {
+        }
 
-            }
+        try {
+            client.execute(httpdel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                JSONObject casa = null;
-                String str = new String(responseBody);
-
-                try {
-
-                    casa = new JSONObject(str);
-
-                }catch (JSONException e) {
-
-                    e.printStackTrace();
-
-                }
-                progress.dismiss();
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                Snackbar.make(view, "Error de conexió", Snackbar.LENGTH_LONG)
-                        .show();
-
-                progress.dismiss();
-
-            }
-        });
 
     }
 
