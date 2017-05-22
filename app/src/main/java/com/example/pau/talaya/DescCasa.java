@@ -108,6 +108,9 @@ public class DescCasa extends AppCompatActivity{
         ImageView pingpongImg = (ImageView)findViewById(R.id.image8);
 
         Button reserva = (Button)findViewById(R.id.btnReserva);
+        final Button valora = (Button)findViewById(R.id.buttonValora);
+
+        valora.bringToFront();
 
         id = b.getString("id");
 
@@ -134,12 +137,9 @@ public class DescCasa extends AppCompatActivity{
 
         txtRating.setText(String.valueOf(CasaList.get(indexCasa).getMitjana()));
 
-        RelativeLayout layoutDesc = (RelativeLayout)findViewById(R.id.descripcio);
         LinearLayout noData = (LinearLayout)findViewById(R.id.noData);
 
         txtDesc.setText(CasaList.get(indexCasa).getDescripcio());
-
-        layoutDesc.bringToFront();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_flecha_back));
@@ -315,6 +315,32 @@ public class DescCasa extends AppCompatActivity{
             }
         });
 
+        valora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.valoracio);
+                dialog.setTitle("Comenta i valora");
+
+                final float valoracio;
+
+                Button accepta = (Button)dialog.findViewById(R.id.buttonAccepta);
+                final EditText comentari = (EditText)dialog.findViewById(R.id.editCom);
+                final RatingBar rating = (RatingBar)dialog.findViewById(R.id.ratingBar2);
+
+                valoracio = rating.getRating();
+
+                accepta.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        postValora(comentari.getText().toString(),valoracio);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
     }
 
     private void postReserva(int Dies, String DiaE, String DiaS, int Persones) {
@@ -403,6 +429,7 @@ public class DescCasa extends AppCompatActivity{
 
 
     }
+
     public void treuMarcador(){
 
         HttpClient client = new DefaultHttpClient();
@@ -428,6 +455,47 @@ public class DescCasa extends AppCompatActivity{
         }
 
 
+    }
+
+    private void postValora(String comentari, float valoracio) {
+
+        HttpResponse response;
+        HttpClient client = new DefaultHttpClient();
+        String url = "http://talaiaapi.azurewebsites.net/api/valoracio";
+        HttpPost post = new HttpPost(url);
+
+        JSONObject user = new JSONObject();
+
+        try {
+            user.put("Puntuacio",valoracio);
+            user.put("Comentari",comentari);
+            user.put("FKUsuari",usuariActiu.getIdUsuari());
+            user.put("FKCasa",CasaList.get(indexCasa).getIdCasa());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String strUser = user.toString();
+
+        post.setEntity(new StringEntity(strUser, "UTF-8"));
+        post.setHeader("Content-Type", "application/json");
+
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+        }
+
+        try {
+            response = client.execute(post);
+            String sresponse = response.getEntity().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

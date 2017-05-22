@@ -168,12 +168,13 @@
                         >
 
                         <Button
-                            android:id="@+id/button4"
+                            android:id="@+id/buttonValora"
                             android:layout_width="150dp"
                             android:layout_height="45dp"
                             android:background="@drawable/borde_valora"
                             android:elevation="10dp"
                             android:text="Valora"
+                            android:clickable="true"
                             android:textAllCaps="false" />
 
                     </LinearLayout>
