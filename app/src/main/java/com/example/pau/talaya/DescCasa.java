@@ -2,16 +2,12 @@ package com.example.pau.talaya;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,13 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpDelete;
@@ -58,9 +47,6 @@ import static com.example.pau.talaya.home.CasaList;
 
 public class DescCasa extends AppCompatActivity{
 
-    DinsConversa dins = new DinsConversa();
-    private AsyncHttpClient clientUsuari;
-    private ProgressDialog progress;
     private DatePickerDialog CalendarPicker;
     private Calendar dateCalendar = Calendar.getInstance();
     public static int indexCasa;
@@ -231,7 +217,6 @@ public class DescCasa extends AppCompatActivity{
                 DinsConversa.idsconversa(CasaList.get(indexCasa).getFK_Propietari());
 
                 intent.putExtras(dades);
-
 
                 startActivity(intent);
 

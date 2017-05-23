@@ -94,10 +94,8 @@ public class DinsConversa extends AppCompatActivity {
 
         Bundle datos = this.getIntent().getExtras();
 
-        int intrep=datos.getInt("idrep");
+        int intrep =datos.getInt("idrep");
         final String id =  String.valueOf(usuariActiu.getIdUsuari());
-
-        Timer timerObj = new Timer();
 
         ///////////////////////////////////
         ///CALLBACK
@@ -137,6 +135,10 @@ public class DinsConversa extends AppCompatActivity {
                     txtMissatge.setText("");
 
                     apiPost(miss,date);
+
+                    getMissatge(idperfilaenviar,usuariActiu.getIdUsuari());
+                    cursor = d.getMissatges(usuariActiu.getIdUsuari(),usuarirep);
+                    mostraListdreta(cursor, from, to);
 
                 }
 
@@ -205,12 +207,12 @@ public class DinsConversa extends AppCompatActivity {
 
 
     }
-    public abstract class AlwaysAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
-        @Override
-        public boolean getUseSynchronousMode() {
-            return false;
-        }
-    }
+//    public abstract class AlwaysAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
+//        @Override
+//        public boolean getUseSynchronousMode() {
+//            return false;
+//        }
+//    }
     private void getMissatge(int id, int id2){
 
         String url = " http://talaiaapi.azurewebsites.net/api/missatge/?envia="+ id +"&rep="+id2;
@@ -218,7 +220,7 @@ public class DinsConversa extends AppCompatActivity {
         clientMissatge = new AsyncHttpClient();
         clientMissatge.setMaxRetriesAndTimeout(0,10000);
 
-        clientMissatge.get(DinsConversa.this, url, new AlwaysAsyncHttpResponseHandler() {
+        clientMissatge.get(DinsConversa.this, url, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
