@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +69,13 @@ public class DescCasa extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desc_casa);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_flecha_back));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(CasaList.get(indexCasa).getNom());
 
         String capacitat, preu, nom, id;
 
@@ -127,13 +137,6 @@ public class DescCasa extends AppCompatActivity{
         LinearLayout noData = (LinearLayout)findViewById(R.id.noData);
 
         txtDesc.setText(CasaList.get(indexCasa).getDescripcio());
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_flecha_back));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(CasaList.get(indexCasa).getNom());
 
         RatingBar avg =(RatingBar)findViewById(R.id.avgRating);
 
@@ -325,18 +328,22 @@ public class DescCasa extends AppCompatActivity{
                 dialog.setContentView(R.layout.valoracio);
                 dialog.setTitle("Comenta i valora");
 
-                final float valoracio;
+                double valoracio;
 
                 Button accepta = (Button)dialog.findViewById(R.id.buttonAccepta);
                 final EditText comentari = (EditText)dialog.findViewById(R.id.editCom);
                 final RatingBar rating = (RatingBar)dialog.findViewById(R.id.ratingBar2);
 
-                valoracio = rating.getRating();
+                LayerDrawable stars = (LayerDrawable) rating.getProgressDrawable();
+                stars.getDrawable(2).setColorFilter(Color.parseColor("#57a639" +
+                        ""), PorterDuff.Mode.SRC_ATOP);
+
 
                 accepta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        postValora(comentari.getText().toString(),valoracio);
+
+                        postValora(comentari.getText().toString(),rating.getRating());
                         dialog.dismiss();
                     }
                 });
@@ -460,7 +467,7 @@ public class DescCasa extends AppCompatActivity{
 
     }
 
-    private void postValora(String comentari, float valoracio) {
+    private void postValora(String comentari, double valoracio) {
 
         HttpResponse response;
         HttpClient client = new DefaultHttpClient();

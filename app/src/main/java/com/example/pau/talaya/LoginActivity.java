@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         usuari = new JSONObject(str);
 
-                        usuariActiu = new UsuariActiu(usuari.getInt("IdUsuari"),usuari.getString("Nom"),usuari.getString("Cognom"));
+                        usuariActiu = new UsuariActiu(usuari.getInt("IdUsuari"),usuari.getString("Nom"),usuari.getString("Cognom"),usuari.getString("Correu"));
 
                         progress.dismiss();
 

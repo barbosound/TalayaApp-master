@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Perfil.OnFragmentInteractionListener} interface
+ * {@link Reserva.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Perfil#newInstance} factory method to
+ * Use the {@link Reserva#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Perfil extends Fragment {
+public class Reserva extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,7 +59,7 @@ public class Perfil extends Fragment {
     private Bundle bPen = new Bundle();
     private Bundle bFin = new Bundle();
 
-    public Perfil() {
+    public Reserva() {
         // Required empty public constructor
     }
 
@@ -69,11 +69,11 @@ public class Perfil extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Perfil.
+     * @return A new instance of fragment Reserva.
      */
     // TODO: Rename and change types and number of parameters
-    public static Perfil newInstance(String param1, String param2) {
-        Perfil fragment = new Perfil();
+    public static Reserva newInstance(String param1, String param2) {
+        Reserva fragment = new Reserva();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

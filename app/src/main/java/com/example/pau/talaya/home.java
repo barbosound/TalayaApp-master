@@ -38,7 +38,7 @@ import static com.example.pau.talaya.LoginActivity.usuariActiu;
 
 public class home extends AppCompatActivity implements ListCases.OnFragmentInteractionListener,
         pendents.OnFragmentInteractionListener,
-        missatges.OnFragmentInteractionListener,Perfil.OnFragmentInteractionListener,
+        missatges.OnFragmentInteractionListener,Reserva.OnFragmentInteractionListener,
         finalitzades.OnFragmentInteractionListener, favorits.OnFragmentInteractionListener,
         Notificacions.OnFragmentInteractionListener, QuiSom.OnFragmentInteractionListener,
         AvisLegal.OnFragmentInteractionListener{
@@ -48,7 +48,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
     ListCases listCases = new ListCases();
     missatges miss = new missatges();
-    Perfil perfil = new Perfil();
+    Reserva reserva = new Reserva();
 
     FragmentManager fM = getSupportFragmentManager();
 
@@ -143,12 +143,12 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
                                 break;
                             case R.id.perfil:
 
-                                getSupportActionBar().setTitle("Perfil");
+                                getSupportActionBar().setTitle("Resrves");
 
-                                if(!perfil.isAdded()){
-                                    fM.beginTransaction().replace(R.id.frame,perfil).commit();
+                                if(!reserva.isAdded()){
+                                    fM.beginTransaction().replace(R.id.frame, reserva).commit();
                                 }else{
-                                    fM.beginTransaction().show(perfil).commit();
+                                    fM.beginTransaction().show(reserva).commit();
                                 }
                                 break;
                             case R.id.surt:
@@ -157,7 +157,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 
-                                builder.setTitle("Confirm");
+                                builder.setTitle("Confirma");
                                 builder.setMessage("Estas segur que vols sortir?");
 
                                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -207,16 +207,6 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-            case R.id.notificacions:
-
-                Notificacions notis = new Notificacions();
-
-                if(!notis.isAdded())
-                {fM.beginTransaction().replace(R.id.frame, notis).commit();}
-                else
-                {fM.beginTransaction().show(notis).commit();}
-
-                break;
             case R.id.qui_som:
 
                 QuiSom qui = new QuiSom();
@@ -252,6 +242,14 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
                 Bfiltre = false;
                 fM.beginTransaction().remove(listCases).commit();
                 consultaFavorits(view);
+
+                break;
+
+            case R.id.perfil:
+
+                Intent intent = new Intent(view.getContext(),perfil.class);
+
+                startActivity(intent);
 
                 break;
         }
@@ -502,7 +500,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
                 bReserva.putStringArrayList("FKCasaFin",FKCasaFin);
                 bReserva.putStringArrayList("EstatFin",EstatFin);
 
-                perfil.setArguments(bReserva);
+                home.this.reserva.setArguments(bReserva);
 
                 progress.dismiss();
 
@@ -676,7 +674,7 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
                 bReserva.putStringArrayList("FKCasaFin",FKCasaFin);
                 bReserva.putStringArrayList("EstatFin",EstatFin);
 
-                perfil.setArguments(bReserva);
+                home.this.reserva.setArguments(bReserva);
 
             }
 

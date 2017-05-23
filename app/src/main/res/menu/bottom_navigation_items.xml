@@ -14,7 +14,7 @@
         android:title="Missatges"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/perfil"
+        android:id="@+id/Reserves"
         android:icon="@drawable/ic_bottom_perfil"
         android:enabled="true"
         android:title="Perfil"

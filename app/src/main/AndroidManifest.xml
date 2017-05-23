@@ -45,6 +45,12 @@
                 android:value=".home" />
 
         </activity>
+        <activity android:name=".perfil">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".home" />
+
+        </activity>
         <activity
             android:name=".DinsConversa"
             android:label="@string/title_activity_dins_conversa"

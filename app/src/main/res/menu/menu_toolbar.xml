@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <item android:id="@+id/notificacions"
-        android:title="Notificacions"
-        app:showAsAction="never"/>
     <item android:id="@+id/qui_som"
         android:title="Qui som?"
         app:showAsAction="never"/>
     <item android:id="@+id/avis_legal"
         android:title="Avís Legal"
         app:showAsAction="never"/>
+    <item android:id="@+id/perfil"
+        android:title="Perfil"
+        app:showAsAction="never"/>
     <item android:id="@+id/refresh"
-        android:title="Avís Legal"
+        android:title="Refrescar"
         android:icon="@drawable/refresh"
         app:showAsAction="always"/>
     <item android:id="@+id/advanced"
-        android:title="Avís Legal"
+        android:title="cerca"
         android:icon="@drawable/search"
         app:showAsAction="always"/>
 

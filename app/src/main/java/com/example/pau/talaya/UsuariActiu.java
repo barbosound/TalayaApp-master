@@ -6,7 +6,7 @@ package com.example.pau.talaya;
 
 public class UsuariActiu {
     private int IdUsuari;
-    private String Nom, Cognom;
+    private String Nom, Cognom, correu;
     private int Token;
 
     public String getNom() {
@@ -21,11 +21,16 @@ public class UsuariActiu {
         return IdUsuari;
     }
 
-    public UsuariActiu(int IdUsuari, String Nom, String Cognom){
+    public String getCorreu() {
+        return correu;
+    }
+
+    public UsuariActiu(int IdUsuari, String Nom, String Cognom, String Correu){
 
         this.IdUsuari = IdUsuari;
         this.Nom = Nom;
         this.Cognom = Cognom;
+        this.correu = Correu;
 
     }
 }
