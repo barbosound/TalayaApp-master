@@ -1,22 +1,20 @@
 package com.example.pau.talaya;
 
-import android.app.ListActivity;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -29,6 +27,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -37,8 +37,10 @@ import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
+import static com.example.pau.talaya.DescCasa.indexCasa;
 import static com.example.pau.talaya.LoginActivity.usuariActiu;
-import static com.example.pau.talaya.R.id.list;
+import static com.example.pau.talaya.home.CasaList;
+
 
 public class DinsConversa extends AppCompatActivity {
     public Cursor cursor,comprovar;
@@ -49,12 +51,15 @@ public class DinsConversa extends AppCompatActivity {
     private TextView txtMissatge;
     private String[] from;
     private int[] to;
+    static int usuarirep;
+   static int idperfilaenviar;
+    static String idd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dins_conversa);
-
+        final Context context = this;
         Window window = getWindow();
         window.setStatusBarColor(Color.parseColor("#4C9141"));
 
@@ -65,49 +70,80 @@ public class DinsConversa extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Missatges");
 
+        final Bundle dades = this.getIntent().getExtras();
+
+
         TextView missatgedreta = (TextView) findViewById(R.id.msg_text_message);
         TextView horamissatge = (TextView) findViewById(R.id.msg_text_time_message);
+
         txtMissatge = (TextView) findViewById(R.id.missatge);
 
-        //LinearLayout layout = (LinearLayout) findViewById(R.id.msg_bubble_background_textesquerra);
 
         final ImageButton enviarmissatge = (ImageButton) findViewById(R.id.enviarmissatge);
         d = new DataBaseManager(this);
         from = new String[]{OpenHelper.M_Missatge, OpenHelper.M_Data,OpenHelper.M_Perfil, OpenHelper.M_Missatge, OpenHelper.M_Data};
-        to = new int[]{R.id.msg_text_message, R.id.msg_text_time_message, R.id.perfilmissatge, R.id.msg_text_time_messageesquerra, R.id.msg_text_messageesquerra};
+        to = new int[]{R.id.msg_text_message, R.id.msg_text_time_message, R.id.perfilmissatge,R.id.msg_text_time_messageesquerra, R.id.msg_text_messageesquerra};
 
-        cursor = d.getMissatges(1,2);
-
+        cursor = d.getMissatges(usuariActiu.getIdUsuari(),idperfilaenviar);
         mostraListdreta(cursor, from, to);
-//      d.insertarusuari('1',"asa@gmail.com", "Albert", "1234", "ajaj", '2', "123");
-        //String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss", new java.util.Date());
-        //d.insertarmissatge( date,"dreta",2,1);
+
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        final Toast toast = Toast.makeText(context, text, duration);
+
+        Bundle datos = this.getIntent().getExtras();
+
+        int intrep=datos.getInt("idrep");
+        final String id =  String.valueOf(usuariActiu.getIdUsuari());
+
+        Timer timerObj = new Timer();
+
+        ///////////////////////////////////
+        ///CALLBACK
+        //////////////////////////////////
+
+        Timer autoUpdate= new Timer();
+        autoUpdate.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+
+
+                        getMissatge(idperfilaenviar,usuariActiu.getIdUsuari());
+                        cursor = d.getMissatges(usuariActiu.getIdUsuari(),usuarirep);
+                        mostraListdreta(cursor, from, to);
+
+                    }
+                });
+            }
+        }, 0, 5000);
 
         enviarmissatge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (!txtMissatge.getText().toString().equals("")){
-
+                    if(d.getCount(id,idd)==0){
+                        d = new DataBaseManager(context);
+                        d.crearconversa(id,idd,CasaList.get(indexCasa).getNom());
+                    }
                     String date = (String) DateFormat.format("yyyy-MM-dd kk:mm:ss", new Date());
                     String miss = txtMissatge.getText().toString();
 
-                    d.insertarmissatge(date, miss, 1, 2);
-
-                    cursor = d.getMissatges(1,2);
-                    mostraListdreta(cursor, from, to);
+                    d.insertarmissatge(date, miss, usuariActiu.getIdUsuari(), idperfilaenviar);
 
                     txtMissatge.setText("");
 
                     apiPost(miss,date);
-
-                    getMissatge();
 
                 }
 
             }
         });
     }
+
     public void mostraListdreta(Cursor cursor, String[] from, int[] to) {
 
         ListView llista = (ListView)findViewById(R.id.listConversa);
@@ -133,8 +169,13 @@ public class DinsConversa extends AppCompatActivity {
         try {
             miss.put("Text",missatge);
             miss.put("Data",data);
+
+            ///////////////////////////////////////////////////////////////
+            ///AQUI!!
+            ///////////////////////////////
+
             miss.put("FKUsuariEnvia",usuariActiu.getIdUsuari());
-            miss.put("FKUsuariRep",usuariActiu.getIdUsuari());
+            miss.put("FKUsuariRep",idperfilaenviar);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -164,14 +205,20 @@ public class DinsConversa extends AppCompatActivity {
 
 
     }
-    private void getMissatge(){
+    public abstract class AlwaysAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
+        @Override
+        public boolean getUseSynchronousMode() {
+            return false;
+        }
+    }
+    private void getMissatge(int id, int id2){
 
-        String url = " http://talaiaapi.azurewebsites.net/api/missatge";
+        String url = " http://talaiaapi.azurewebsites.net/api/missatge/?envia="+ id +"&rep="+id2;
 
         clientMissatge = new AsyncHttpClient();
         clientMissatge.setMaxRetriesAndTimeout(0,10000);
 
-        clientMissatge.get(DinsConversa.this, url, new AsyncHttpResponseHandler() {
+        clientMissatge.get(DinsConversa.this, url, new AlwaysAsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -211,11 +258,12 @@ public class DinsConversa extends AppCompatActivity {
 
                             dateString = sdf2.format(sdf1.parse(dateString));
 
-                            d.insertarmissatge(miss,dateString,2,1);
 
-                            cursor = d.getMissatges(2,1);
+                            d.insertarmissatge(miss,dateString,usuarirep,usuariActiu.getIdUsuari());
+                            cursor = d.getMissatges(usuariActiu.getIdUsuari(),usuarirep);
 
                             mostraListdreta(cursor, from, to);
+
                         }
 
 
@@ -238,6 +286,14 @@ public class DinsConversa extends AppCompatActivity {
 
             }
         });
+
+
+    }
+    static void idsconversa(int idrep){
+
+        idperfilaenviar=idrep;
+        idd= String.valueOf(idperfilaenviar);
+
 
     }
 }

@@ -37,7 +37,7 @@ public class DataBaseManager {
 
 //        dbW.insert(database.TABLE_CIUTATS, null, vciutat);
     }
-    public void crearconversa ( String perfil1, String perfil2, int idconversa ){
+    public void crearconversa (String perfil1, String perfil2, String idconversa ){
 
         ContentValues vciutat = new ContentValues();
 
@@ -45,17 +45,38 @@ public class DataBaseManager {
         vciutat.put(database.C_Perfil2, perfil2);
         vciutat.put(database.C_IDConversa, idconversa);
 
-        dbW.insert(database.TABLE_Missatges, null, vciutat);
+        dbW.insert(database.TABLE_Conversa, null, vciutat);
     }
 
-    public Cursor getConverses(int id){
+    public Cursor getConversesperid(String idenvia, String idrep){
 
 
-        Cursor cursor = dbR.rawQuery("SELECT * FROM "+ database.TABLE_Conversa + " Where " + database.C_IDConversa + " = '" + id + "'collate NOCASE",null);
+        String sql = "SELECT * FROM "+ database.TABLE_Conversa + " Where " + database.C_Perfil + " = ' " + idenvia + "' and " + database.C_Perfil2 + " = " + idrep;
+        Cursor cursor = dbR.rawQuery(sql ,null);
 
         return cursor;
 
     }
+    public int getCount(String idenvia, String idrep) {
+
+
+        Cursor cursor = dbR.rawQuery("select * from " + database.TABLE_Conversa +
+                " where " + idenvia + " = " + database.C_Perfil + " and " + idrep + " = " + database.C_Perfil2, null);
+
+        int i = cursor.getCount();
+
+
+        return i;
+    }
+
+    public Cursor getConverses(){
+
+
+        Cursor cursor = dbR.rawQuery("SELECT * FROM "+ database.TABLE_Conversa,null);
+        return cursor;
+
+    }
+
     public Cursor getMissatges(int id1, int id2){
 
         Cursor cursor = dbR.rawQuery("SELECT * FROM "+ database.TABLE_Missatges +" Where " + database.M_Perfil + " = '" + id1 + "'collate NOCASE or " + database.M_Perfil + " = '" + id2 + "'collate NOCASE"  ,null);

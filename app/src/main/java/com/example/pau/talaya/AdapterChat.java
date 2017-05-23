@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import static com.example.pau.talaya.LoginActivity.usuariActiu;
+
 public class AdapterChat extends SimpleCursorAdapter {
     public Cursor cursor;
     public SimpleCursorAdapter adapterdreta, adapteresquerra;
@@ -31,7 +33,7 @@ public class AdapterChat extends SimpleCursorAdapter {
         //Cursor usuari;
         //usuari=database.getusuari();
 
-        if(comparar.equalsIgnoreCase("1")){
+        if(comparar.equalsIgnoreCase(String.valueOf(usuariActiu.getIdUsuari()))){
 
             missatgeesquerra.setVisibility(View.INVISIBLE);
             missatgedreta.setVisibility(View.VISIBLE);

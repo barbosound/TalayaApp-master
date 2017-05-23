@@ -2,6 +2,7 @@ package com.example.pau.talaya;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import static com.example.pau.talaya.R.id.idenvia;
+import static com.example.pau.talaya.R.id.idrep;
 
 
 /**
@@ -21,6 +26,7 @@ import android.widget.ListView;
  * Use the {@link missatges#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class missatges extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,9 +39,16 @@ public class missatges extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private View view;
+
+    public SimpleCursorAdapter adapter;
     private OnFragmentInteractionListener mListener;
+    private String[] from;
+    private int[] to;
+    public Cursor cursor;
 
     public missatges() {
+
         // Required empty public constructor
     }
 
@@ -72,23 +85,53 @@ public class missatges extends Fragment {
                              Bundle savedInstanceState) {
         final DataBaseManager a = new DataBaseManager(getContext());
 
-        View view = inflater.inflate(R.layout.fragment_missatges, container, false);
+        //ENVIO EL MEU ID, el ID del que ho rep i el seu nom.
 
 
-        final ListView llista = (ListView)view.findViewById(R.id.list);
-        final Button boto =(Button)view.findViewById(R.id.button3);
-        boto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), DinsConversa.class);
-                startActivityForResult(intent, 0);
-            }
-        });
+
+        //a.crearconversa(usuariActiu.getIdUsuari(),141,"Gindalf");
+
+        view = inflater.inflate(R.layout.fragment_missatges, container, false);
+
+        TextView envia = (TextView)view.findViewById(idenvia);
+        TextView rep = (TextView)view.findViewById(idrep);
+
+
+
+        final ListView llista = (ListView) view.findViewById(R.id.listConverses);
+        final DinsConversa dins = new DinsConversa();
+
+
+
+        from = new String[]{OpenHelper.C_Perfil2, OpenHelper.C_Perfil, OpenHelper.C_IDConversa};
+        to = new int[]{idenvia, idrep, R.id.nomcasa};
+
+        // final Button boto =(Button)view.findViewById(R.id.button4);
+
+        llista.setAdapter(adapter);
+
+        cursor = a.getConverses();
+        mostrarconverses(cursor, from, to);
+
         llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                TextView envia = (TextView) view.findViewById(idenvia);
+                TextView rep = (TextView) view.findViewById(idrep);
+                String senvia=envia.getText().toString();
+                Bundle bundle = new Bundle();
 
+                dins.idsconversa(Integer.parseInt(senvia));
+
+                Intent intent = new Intent(view.getContext(), DinsConversa.class);
+                intent.putExtras(bundle);
+
+
+
+
+
+                startActivity(intent);
             }
         });
 
@@ -97,7 +140,17 @@ public class missatges extends Fragment {
 
         return view;
     }
+    public void mostrarconverses(Cursor cursor, String[] from, int[] to) {
 
+        ListView llista = (ListView)view.findViewById(R.id.listConverses);
+
+        adapter = new AdapterConverses(getContext(), R.layout.rowconversa, cursor, from, to, 1);
+        llista.setAdapter(adapter);
+
+        llista.setSelection(llista.getAdapter().getCount()-1);
+
+
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

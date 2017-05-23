@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,17 +58,17 @@ import static com.example.pau.talaya.home.CasaList;
 
 public class DescCasa extends AppCompatActivity{
 
-
+    DinsConversa dins = new DinsConversa();
     private AsyncHttpClient clientUsuari;
     private ProgressDialog progress;
     private DatePickerDialog CalendarPicker;
     private Calendar dateCalendar = Calendar.getInstance();
-    private int indexCasa;
+    public static int indexCasa;
 
     final Context context = this;
 
     private Date dateE, dateS;
-
+    private DataBaseManager d;
     String DiaE, DiaS;
 
     int Dies, Persones;
@@ -158,9 +159,9 @@ public class DescCasa extends AppCompatActivity{
 
         final FloatingActionButton favorits = (FloatingActionButton)findViewById(R.id.favButton);
 
-        final FloatingActionButton misstge = (FloatingActionButton)findViewById(R.id.missatgeButton);
+        final FloatingActionButton crearconversa = (FloatingActionButton) findViewById(R.id.missatgeButton);
 
-        misstge.setImageResource(R.drawable.misstage);
+        crearconversa.setImageResource(R.drawable.misstage);
 
         if (CasaList.get(indexCasa).isFavorits()){
             favorits.setImageResource(R.drawable.star_selected);
@@ -219,6 +220,23 @@ public class DescCasa extends AppCompatActivity{
 
             noData.setVisibility(View.VISIBLE);
         }
+
+        crearconversa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle dades = new Bundle();
+                Intent intent = new Intent(view.getContext(), DinsConversa.class);
+
+                DinsConversa.idsconversa(CasaList.get(indexCasa).getFK_Propietari());
+
+                intent.putExtras(dades);
+
+
+                startActivity(intent);
+
+            }
+        });
 
         reserva.setOnClickListener(new View.OnClickListener() {
             @Override
