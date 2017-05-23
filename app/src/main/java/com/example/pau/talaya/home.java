@@ -141,9 +141,9 @@ public class home extends AppCompatActivity implements ListCases.OnFragmentInter
                                 }
 
                                 break;
-                            case R.id.perfil:
+                            case R.id.Reserves:
 
-                                getSupportActionBar().setTitle("Resrves");
+                                getSupportActionBar().setTitle("Reserves");
 
                                 if(!reserva.isAdded()){
                                     fM.beginTransaction().replace(R.id.frame, reserva).commit();

@@ -139,7 +139,7 @@ public class DescCasa extends AppCompatActivity{
         txtDesc.setText(CasaList.get(indexCasa).getDescripcio());
 
         RatingBar avg =(RatingBar)findViewById(R.id.avgRating);
-
+        
         avg.setRating((float) CasaList.get(indexCasa).getMitjana());
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPageAndroid);
